@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /cgi-bin/
+Disallow: /assets/download
+
+Sitemap: https://hookahplacechelyabinsk.ru/sitemap.xml
+Host: hookahplacechelyabinsk.ru
