@@ -64,6 +64,8 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);-webkit-backd
 @media(max-width:640px){.dish{contain-intrinsic-size:auto 360px}}
 .dish:hover{transform:translateY(-6px);box-shadow:0 24px 50px -20px rgba(0,0,0,.8),0 0 0 1px rgba(225,27,34,.25)}
 .dish.hide{display:none}
+
+/* === Картинка === */
 .dish-img{aspect-ratio:4/3;overflow:hidden;position:relative;background:radial-gradient(120% 120% at 50% 0%,rgba(225,27,34,.16),rgba(10,9,8,.9))}
 .dish-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;display:block}
 .dish:hover .dish-img img{transform:scale(1.06)}
@@ -81,6 +83,12 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);-webkit-backd
 .dish-img.gal:hover .gal-nav{opacity:1}
 .gal-nav.prev{left:8px}.gal-nav.next{right:8px}
 @media(hover:none){.gal-nav{display:none!important}}
+
+/* === Карточка БЕЗ фото — компактная === */
+.dish.no-img .dish-body{padding:14px 18px 16px}
+.dish.no-img{border-color:rgba(255,255,255,.06)}
+
+/* === Тело карточки === */
 .dish-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .dish-body h3{font-size:15px;font-weight:600;line-height:1.3}
 .dish-star{color:var(--gold);margin-left:6px}
@@ -97,6 +105,12 @@ header{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);-webkit-backd
 .dish.drink .drink-meta{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
 .dish.drink .dish-foot{margin-top:auto;border-top:1px solid rgba(255,255,255,.06);padding-top:10px}
 .dish.drink:hover{transform:translateY(-4px);box-shadow:0 20px 40px -18px rgba(0,0,0,.7),0 0 0 1px rgba(225,27,34,.35)}
+
+/* === Кнопка «Заказать» === */
+.dish-order{margin-top:11px;width:100%;padding:10px 0;border-radius:12px;border:1px solid rgba(225,27,34,.45);background:rgba(225,27,34,.12);color:#ffb3b6;font-family:Manrope,system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.dish-order:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.dish.no-img .dish-order{margin-top:10px}
+
 .rv{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
@@ -153,7 +167,7 @@ body.dm-lock{overflow:hidden}
 @media(max-width:760px){#dmodal{padding:0;align-items:flex-end}.dm-card{width:100%;max-height:92vh;border-radius:22px 22px 0 0;animation:dmUp .3s ease}}
 @keyframes dmUp{from{transform:translateY(70px);opacity:0}to{transform:none;opacity:1}}
 
-/* Cart (сокращённо — как в оригинале) */
+/* Cart */
 :root{--cart-red:#e11b22;--cart-red2:#ff3b41;--cart-gold:#d8b26a}
 .hp-cart-ctl{margin-top:10px}
 .hp-add{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 0;border-radius:12px;border:1px solid rgba(216,178,106,.5);background:linear-gradient(120deg,rgba(216,178,106,.16),rgba(216,178,106,.05));color:var(--cart-gold);font-family:Manrope,system-ui,sans-serif;font-size:13px;font-weight:800;letter-spacing:.02em;cursor:pointer;transition:.2s}
@@ -198,7 +212,8 @@ body.dm-lock{overflow:hidden}
 .hp-clear{flex:none;padding:0 16px;height:50px;border-radius:13px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--muted);font-family:Manrope;font-size:13px;font-weight:700;cursor:pointer}
 .hp-checkout{flex:1;height:50px;border-radius:13px;border:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#ff3b41,#c8121a);color:#fff;font-family:Manrope;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 12px 30px -12px rgba(225,27,34,.7)}
 body.hp-lock{overflow:hidden}
-.dm-addcart{margin-top:4px}
+
+/* Рекомендации в модалке */
 .dm-recs{border-top:1px solid rgba(255,255,255,.08);padding-top:16px;margin-top:6px}
 .dm-recs h4{font-family:Manrope,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cart-gold);margin-bottom:12px}
 .dm-rec-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
@@ -319,12 +334,14 @@ body.hp-lock{overflow:hidden}
 
 <script>
 /* =========================================================
-   CONFIG
+   CONFIG — тут меняем источник данных
    ========================================================= */
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQFdfSTE3-ixLkd5HR8tgoL96fbJU1-Kn-vivn4mDqZrc8lO0kxtvHFEYMGEg3yq6djZVnjo3RsTTzt/pub?output=csv';  // локальный CSV. Для Google Sheets: 'https://docs.google.com/spreadsheets/d/e/XXX/pub?gid=0&single=true&output=csv'
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQFdfSTE3-ixLkd5HR8tgoL96fbJU1-Kn-vivn4mDqZrc8lO0kxtvHFEYMGEg3yq6djZVnjo3RsTTzt/pub?output=csv';
+// Для Google Sheets:
+// const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/XXX/pub?gid=0&single=true&output=csv';
 
 /* =========================================================
-   CSV parser (RFC-4180, поддержка кавычек)
+   CSV parser (RFC-4180)
    ========================================================= */
 function parseCSV(text){
   const rows=[]; let row=[], cell='', inQ=false;
@@ -364,30 +381,26 @@ function priceHTML(p){
   if(n==null) return '<span class="dish-price tbd">по меню</span>';
   return '<span class="dish-price">'+n.toLocaleString('ru-RU')+' ₽</span>';
 }
-function priceText(p){
-  const n=fmtPrice(p);
-  if(n==null) return 'по меню';
-  return n.toLocaleString('ru-RU')+' ₽';
-}
+const DRINK_RE = /^(Коктейли|Милкшейки|Настойки|Крепкий|Вино|Пиво|Чай|Кофе|Китайский чай|Авторский чай|Освежающие|Лимонады|Напитки)/i;
 
 /* =========================================================
-   ГЛАВНЫЙ рендер одной карточки (1:1 с оригиналом)
+   Рендер карточки
    ========================================================= */
 function renderCard(row){
   const imgs=(row.images||'').split('|').map(s=>s.trim()).filter(Boolean);
-  const isDrink = /^(Коктейли|Милкшейки|Настойки|Крепкий|Вино|Пиво|Чай|Кофе|Китайский чай|Авторский чай|Освежающие|Лимонады|Напитки)/i.test(row.category||'');
+  const isDrink = DRINK_RE.test(row.category||'');
   const isPopular = row.popular==='1';
   const star = isPopular ? '<span class="dish-star" title="Выбор гостей">★</span>' : '';
-  const cat = row.subcategory
-    ? row.category+' '+row.subcategory
-    : row.category;
+  const cat = row.subcategory ? row.category+' '+row.subcategory : row.category;
   const id = row.id;
   const cartKey = row.id+'__'+Math.random().toString(36).slice(2,7);
+  const hasOrder = row.rest==='pravda' && row.order_url;
 
+  /* ---- картинка ---- */
   let imgBlock;
   if(imgs.length>1){
     const slides = imgs.map(u=>'<img alt="'+esc(row.name)+'" loading="lazy" decoding="async" src="'+esc(u)+'">').join('');
-    const dots = imgs.map((_,i)=>'<span'+(i===0?' class="on"':'')+'></span>').join('');
+    const dots   = imgs.map((_,i)=>'<span'+(i===0?' class="on"':'')+'></span>').join('');
     imgBlock = '<div class="dish-img gal" data-count="'+imgs.length+' фото">'+
       '<div class="dish-slides">'+slides+'</div>'+
       '<div class="dish-dots">'+dots+'</div>'+
@@ -397,10 +410,10 @@ function renderCard(row){
   } else if(imgs.length===1){
     imgBlock = '<div class="dish-img"><img alt="'+esc(row.name)+'" loading="lazy" decoding="async" src="'+esc(imgs[0])+'"></div>';
   } else {
-    imgBlock = '<div class="dish-img"></div>';
+    imgBlock = ''; // нет фото — карточка компактная
   }
 
-  // Описание + состав (drink показывается как drink-ing отдельным блоком)
+  /* ---- тело ---- */
   let bodyInner = '<h3>'+esc(row.name)+star+'</h3>';
   if(isDrink && row.sostav){
     bodyInner += '<div class="drink-meta">'+esc(row.category)+'</div>';
@@ -412,7 +425,15 @@ function renderCard(row){
   bodyInner += '<div class="dish-foot">'+priceHTML(row.price)+
                '<span class="dish-w">'+esc(row.weight||'')+'</span></div>';
 
-  const cls = 'dish lg rv'+(isDrink?' drink':'');
+  /* ---- кнопка «Заказать» (только Правда) ---- */
+  if(hasOrder){
+    bodyInner += '<button class="dish-order" type="button" data-order-url="'+esc(row.order_url)+'">Заказать</button>';
+  }
+
+  const cls = 'dish lg rv'
+    +(isDrink?' drink':'')
+    +(imgs.length?'':' no-img');
+
   return '<article class="'+cls+'" data-cat="'+esc(cat)+'" data-id="'+esc(id)+
     '" data-rest="'+esc(row.rest)+'" data-cartkey="'+esc(cartKey)+'">'+
     imgBlock+
@@ -421,21 +442,19 @@ function renderCard(row){
 }
 
 /* =========================================================
-   Фильтры — генерируются из данных
+   Фильтры из данных
    ========================================================= */
 function buildFilters(rows, rest){
   const cats=[...new Set(rows.filter(r=>r.rest===rest).map(r=>r.category))];
-  // Правда: особый порядок — как в оригинале
   const order = {
     pravda:['Закуски фри','Холодные закуски','Горячие закуски','Салаты','Супы','Паста','Бургеры','Основное','Гарниры','Соусы','Десерты','Коктейли авторские','Коктейли классические','Коктейли б/а','Милкшейки','Крепкий алкоголь','Вино красное','Вино белое','Вино по бокалам','Вино игристое','Пиво бутылочное','Пиво розлив','Настойки и шоты','Классический чай и Кофе','Авторский чай','Китайский чай','Освежающие напитки','Лимонады на компанию'],
     soyuz:['popular','Закуски фри','Холодные закуски','Горячие закуски','Салаты','Супы','Паста','Бургеры','Основное','Гарниры','Соусы','Десерты','Напитки Чай','Напитки Фирменный чай','Напитки Восточный чай','Напитки Лимонады','Напитки Коктейли б/а','Напитки Коктейли','Напитки Авторские','Напитки Настойки','Напитки Шоты','Напитки Глинтвейн','Напитки Смузи и милкшейки']
   };
   const ordered = (order[rest]||[]).filter(c=>c==='popular'||cats.includes(c));
-  // добавляем категории, которых нет в order
   cats.forEach(c=>{if(!ordered.includes(c))ordered.push(c)});
 
   let html='<button class="chip on" data-f="all" aria-pressed="true">Все</button>';
-  if(rest==='soyuz') html='<button class="chip on" data-f="all" aria-pressed="true">Все</button><button class="chip" data-f="popular" aria-pressed="false">★ Выбор гостей</button>';
+  if(rest==='soyuz') html+='<button class="chip" data-f="popular" aria-pressed="false">★ Выбор гостей</button>';
 
   ordered.forEach(c=>{
     if(c==='popular') return;
@@ -450,42 +469,6 @@ function buildFilters(rows, rest){
     }
   });
   return html;
-}
-
-/* =========================================================
-   Загрузка и инициализация
-   ========================================================= */
-let ALL_ROWS=[];
-
-async function boot(){
-  const loader=document.getElementById('menuLoader');
-  try{
-    const res=await fetch(CSV_URL,{cache:'no-store'});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const text=await res.text();
-    ALL_ROWS=parseCSV(text);
-
-    // Рендерим карточки по точкам
-    const gP=document.getElementById('gridPravda');
-    const gS=document.getElementById('gridSoyuz');
-    gP.innerHTML=ALL_ROWS.filter(r=>r.rest==='pravda').map(renderCard).join('');
-    gS.innerHTML=ALL_ROWS.filter(r=>r.rest==='soyuz').map(renderCard).join('');
-
-    // Фильтры
-    document.querySelector('.filters[data-rest="pravda"]').innerHTML=buildFilters(ALL_ROWS,'pravda');
-    document.querySelector('.filters[data-rest="soyuz"]').innerHTML=buildFilters(ALL_ROWS,'soyuz');
-
-    loader.style.display='none';
-
-    // Инициализация галерей
-    document.querySelectorAll('.dish-img.gal').forEach(initGal);
-
-    // Инициализация корзины/модалки/фильтров/поиска (тот же код, что в оригинале)
-    initUI();
-  }catch(e){
-    loader.className='menu-error';
-    loader.textContent='Не удалось загрузить меню: '+e.message;
-  }
 }
 
 /* =========================================================
@@ -505,7 +488,234 @@ function initGal(g){
 window.galInit=initGal;
 
 /* =========================================================
-   UI: фильтры, поиск, модалка, корзина — 1:1 с оригиналом
+   Глобальное состояние
+   ========================================================= */
+let ALL_ROWS=[];
+
+/* =========================================================
+   Корзина (глобальная)
+   ========================================================= */
+const Cart = (function(){
+  const STORE='hp_cart_v2';
+  const PLUS='<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+  let cart={};try{cart=JSON.parse(localStorage.getItem(STORE))||{};}catch(e){cart={};}
+  function save(){localStorage.setItem(STORE,JSON.stringify(cart));}
+  function money(n){return n.toLocaleString('ru-RU').replace(/\u00a0/g,'\u202f')+'\u202f\u20bd';}
+  function parsePrice(el){if(!el||el.classList.contains('tbd'))return null;const d=el.textContent.replace(/[^0-9]/g,'');return d?parseInt(d,10):null;}
+  function info(card){
+    const h=card.querySelector('h3');const name=h?h.textContent.replace('★','').trim():'';
+    const price=parsePrice(card.querySelector('.dish-price'));
+    const img=card.querySelector('.dish-img img');const src=img?img.getAttribute('src'):'';
+    const w=card.querySelector('.dish-w');
+    return {key:card.dataset.cartkey,name,price,img:src,weight:w?w.textContent.trim():''};
+  }
+  const listeners=[];
+  function onChange(fn){listeners.push(fn);}
+  function emit(){listeners.forEach(fn=>fn());}
+  function add(card){const d=info(card);if(d.price==null)return;if(!cart[d.key])cart[d.key]={name:d.name,price:d.price,img:d.img,weight:d.weight,q:0};cart[d.key].q++;save();emit();}
+  function inc(k){if(cart[k]){cart[k].q++;save();emit();}}
+  function dec(k){if(cart[k]){cart[k].q--;if(cart[k].q<=0)delete cart[k];save();emit();}}
+  function del(k){delete cart[k];save();emit();}
+  function clear(){cart={};save();emit();}
+  function count(){let n=0;for(const k in cart)n+=cart[k].q;return n;}
+  function total(){let s=0;for(const k in cart)s+=cart[k].q*cart[k].price;return s;}
+  function get(k){return cart[k];}
+  return {add,inc,dec,del,clear,count,total,get,onChange,money,info,parsePrice,PLUS};
+})();
+
+/* =========================================================
+   Инициализация карточек корзины (кнопки на карточках)
+   ========================================================= */
+function initCardCartButtons(){
+  document.querySelectorAll('.dish').forEach(card=>{
+    if(Cart.parsePrice(card.querySelector('.dish-price'))==null)return;
+    const body=card.querySelector('.dish-body');if(!body)return;
+    // удалим старую, если есть (на случай повторной инициализации)
+    const old=body.querySelector('.hp-cart-ctl');if(old)old.remove();
+    const ctl=document.createElement('div');ctl.className='hp-cart-ctl';
+    body.appendChild(ctl);
+    ctl.addEventListener('click',e=>e.stopPropagation());
+    card._hpctl=ctl;
+  });
+}
+function renderCardCartButtons(){
+  document.querySelectorAll('.dish').forEach(card=>{
+    const ctl=card._hpctl;if(!ctl)return;
+    const k=card.dataset.cartkey;const it=Cart.get(k);const q=it?it.q:0;
+    if(q<=0){
+      ctl.innerHTML='<button class="hp-add" type="button">'+Cart.PLUS+' В корзину</button>';
+      ctl.querySelector('.hp-add').onclick=e=>{e.stopPropagation();Cart.add(card);};
+    } else {
+      ctl.innerHTML='<div class="hp-step"><button type="button" data-a="m">−</button><span class="hp-q">'+q+'</span><button type="button" data-a="p">+</button></div>';
+      ctl.querySelector('[data-a=m]').onclick=e=>{e.stopPropagation();Cart.dec(k);};
+      ctl.querySelector('[data-a=p]').onclick=e=>{e.stopPropagation();Cart.inc(k);};
+    }
+  });
+}
+
+/* =========================================================
+   Корзина-drawer
+   ========================================================= */
+function initDrawer(){
+  const fab=document.getElementById('hpFab'),back=document.getElementById('hpCartBack'),drawer=document.getElementById('hpCart');
+  const listEl=document.getElementById('hpCartList'),totalEl=document.getElementById('hpTotal');
+  function openCart(){back.classList.add('open');drawer.classList.add('open');document.body.classList.add('hp-lock');}
+  function closeCart(){back.classList.remove('open');drawer.classList.remove('open');document.body.classList.remove('hp-lock');}
+  fab.addEventListener('click',openCart);
+  back.addEventListener('click',closeCart);
+  document.getElementById('hpCartClose').addEventListener('click',closeCart);
+  document.getElementById('hpClear').addEventListener('click',Cart.clear);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
+
+  Cart.onChange(()=>{
+    const n=Cart.count();
+    fab.classList.toggle('show',n>0);
+    fab.querySelector('.hp-badge').textContent=n;
+    fab.querySelector('.hp-fabsum').innerHTML=Cart.money(Cart.total());
+    totalEl.innerHTML=Cart.money(Cart.total());
+    renderCardCartButtons();
+
+    // drawer list
+    const keys=[];
+    // получаем ключи через гет — Cart не отдаёт объект, соберём через локальный цикл
+    document.querySelectorAll('.dish').forEach(card=>{
+      const k=card.dataset.cartkey;const it=Cart.get(k);if(it&&it.q>0)keys.push([k,it]);
+    });
+    // плюс позиции, которых нет в DOM (не должно случиться, но на всякий)
+    if(!keys.length){
+      listEl.innerHTML='<div class="hp-empty">Корзина пуста<br><span style="font-size:13px;font-weight:500">Добавьте блюда из меню</span></div>';
+      return;
+    }
+    let h='';
+    keys.forEach(([k,it])=>{
+      h+='<div class="hp-item"><div class="hp-item-img">'+(it.img?'<img src="'+it.img+'" alt="">':'')+'</div>'
+       +'<div class="hp-item-mid"><div class="hp-item-name">'+esc(it.name)+'</div>'
+       +'<div class="hp-item-price"><b>'+Cart.money(it.price)+'</b>'+(it.weight?' · '+esc(it.weight):'')+'</div>'
+       +'<div class="hp-mini"><button data-k="'+k+'" data-a="m">−</button><span class="hp-q">'+it.q+'</span><button data-k="'+k+'" data-a="p">+</button></div></div>'
+       +'<button class="hp-item-del" data-k="'+k+'" data-a="d">Удалить</button></div>';
+    });
+    listEl.innerHTML=h;
+    listEl.querySelectorAll('button[data-a]').forEach(b=>{
+      b.onclick=()=>{const k=b.getAttribute('data-k'),a=b.getAttribute('data-a');
+        if(a==='m')Cart.dec(k);else if(a==='p')Cart.inc(k);else Cart.del(k);};
+    });
+  });
+}
+
+/* =========================================================
+   Модалка + рекомендации
+   ========================================================= */
+const Dmodal = (function(){
+  const dm=document.getElementById('dmodal');
+  if(!dm) return null;
+  const media=dm.querySelector('.dm-media'),cat_=dm.querySelector('.dm-cat'),
+        ttl=dm.querySelector('.dm-body h3'),dsc=dm.querySelector('.dm-body p'),
+        foot=dm.querySelector('.dm-foot'),ks=dm.querySelector('.dm-sostav'),
+        kb=dm.querySelector('.dm-kbju'),ob=dm.querySelector('.dm-order');
+
+  function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+  function open(card){
+    media.innerHTML='';
+    const img=card.querySelector('.dish-img');
+    if(img){
+      const c=img.cloneNode(true);
+      c.querySelectorAll('img').forEach(i=>i.removeAttribute('loading'));
+      media.appendChild(c);
+      if(c.classList.contains('gal'))initGal(c);
+    }
+    const h=card.querySelector('h3'),p=card.querySelector('p'),f=card.querySelector('.dish-foot');
+    ttl.innerHTML=h?h.innerHTML:'';
+    dsc.textContent=p?p.textContent:'';
+    foot.innerHTML=f?f.innerHTML:'';
+    cat_.textContent=(card.getAttribute('data-cat')||'').replace('popular','').trim();
+
+    // состав
+    const row=ALL_ROWS.find(r=>r.id===card.getAttribute('data-id'));
+    if(row && row.sostav && !card.classList.contains('drink')){
+      ks.innerHTML='<b>Состав</b>';ks.appendChild(document.createTextNode(row.sostav));ks.classList.remove('off');
+    } else {ks.innerHTML='';ks.classList.add('off');}
+
+    // кбжу (если есть колонки)
+    if(row && (row.kcal || row.proteins || row.fats || row.carbs)){
+      const parts=[];
+      if(row.kcal)parts.push('<span><b>'+esc(row.kcal)+'</b> ккал</span>');
+      if(row.proteins)parts.push('<span><b>'+esc(row.proteins)+' г</b> белки</span>');
+      if(row.fats)parts.push('<span><b>'+esc(row.fats)+' г</b> жиры</span>');
+      if(row.carbs)parts.push('<span><b>'+esc(row.carbs)+' г</b> углеводы</span>');
+      kb.innerHTML='<span>на 100 г</span>'+parts.join('');kb.classList.remove('off');
+    } else {kb.innerHTML='';kb.classList.add('off');}
+
+    // ссылка заказа в модалке
+    if(row && row.rest==='pravda' && row.order_url){
+      ob.href=row.order_url;ob.classList.remove('off');
+    } else {
+      ob.classList.add('off');
+    }
+
+    // ---- «Советуем попробовать» ----
+    const oldRecs=dm.querySelector('.dm-recs');if(oldRecs)oldRecs.remove();
+    if(row){
+      const pool=ALL_ROWS.filter(r=>r.rest===row.rest && r.id!==row.id && r.name);
+      const drinks=shuffle(pool.filter(r=>DRINK_RE.test(r.category||'')));
+      const foods =shuffle(pool.filter(r=>!DRINK_RE.test(r.category||'')));
+      const pick=[...foods.slice(0,4),...drinks.slice(0,2)];
+      shuffle(pick);
+      if(pick.length){
+        const wrap=document.createElement('div');wrap.className='dm-recs';
+        let html='<h4>Советуем попробовать</h4><div class="dm-rec-row">';
+        pick.forEach(r=>{
+          const imgs=(r.images||'').split('|').filter(Boolean);
+          const src=imgs[0]||'';
+          const isdr=DRINK_RE.test(r.category||'');
+          const price=fmtPrice(r.price);
+          const pr=price!=null
+            ? '<span class="dm-rec-price">'+price.toLocaleString('ru-RU')+' ₽</span>'
+            : '<span class="dm-rec-price tbd">по меню</span>';
+          html+='<div class="dm-rec" data-rec-id="'+esc(r.id)+'">'+
+            '<div class="dm-rec-img">'+(src?'<img src="'+esc(src)+'" alt="" loading="lazy">':'')+'</div>'+
+            '<div class="dm-rec-b">'+
+              '<span class="dm-rec-tag">'+(isdr?'Напиток':'Блюдо')+'</span>'+
+              '<div class="dm-rec-name">'+esc(r.name)+'</div>'+
+              '<div class="dm-rec-foot">'+pr+
+                (price!=null?'<button class="dm-rec-add" data-add-id="'+esc(r.id)+'" title="В корзину">+</button>':'')+
+              '</div>'+
+            '</div></div>';
+        });
+        html+='</div>';wrap.innerHTML=html;
+
+        // вставляем ПОСЛЕ .dm-order
+        ob.parentNode.insertBefore(wrap, ob.nextSibling);
+
+        wrap.querySelectorAll('.dm-rec').forEach(el=>{
+          el.addEventListener('click',ev=>{
+            if(ev.target.closest('.dm-rec-add'))return;
+            const t=document.querySelector('.dish[data-id="'+el.getAttribute('data-rec-id')+'"]');
+            if(t)open(t);
+          });
+        });
+        wrap.querySelectorAll('.dm-rec-add').forEach(b=>{
+          b.addEventListener('click',ev=>{
+            ev.stopPropagation();
+            const t=document.querySelector('.dish[data-id="'+b.getAttribute('data-add-id')+'"]');
+            if(t)Cart.add(t);
+          });
+        });
+      }
+    }
+
+    dm.classList.add('open');document.body.classList.add('dm-lock');
+  }
+
+  function close(){dm.classList.remove('open');document.body.classList.remove('dm-lock');}
+  dm.querySelectorAll('[data-dmclose]').forEach(el=>el.addEventListener('click',close));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+
+  return {open,close};
+})();
+
+/* =========================================================
+   Инициализация UI (фильтры, поиск, рест-табы, делегирование кликов)
    ========================================================= */
 function initUI(){
   const rb=[...document.querySelectorAll('.rest')],
@@ -543,8 +753,7 @@ function initUI(){
       g.classList.toggle('off',!active);
       g.querySelectorAll('.dish').forEach(d=>{
         let ok=active && cat(d.dataset.cat,S.f[g.dataset.rest]) && (!S.q || N(d.textContent).includes(N(S.q)));
-        // 'popular' — спец-фильтр Союза
-        if(active && S.f[g.dataset.rest]==='popular') ok = d.querySelector('.dish-star')!=null && (!S.q || N(d.textContent).includes(N(S.q)));
+        if(active && S.f[g.dataset.rest]==='popular') ok = !!d.querySelector('.dish-star') && (!S.q || N(d.textContent).includes(N(S.q)));
         d.classList.toggle('hide',!ok);
         if(ok){vis++;d.classList.add('in');}
       });
@@ -571,132 +780,64 @@ function initUI(){
   const cl=document.querySelector('.lg-clear');
   if(cl)cl.addEventListener('click',()=>{S.q='';inp.value='';apply();inp.focus();});
 
+  // Делегирование кликов на карточки (модалка) + на «Заказать» (Яндекс)
+  document.addEventListener('click',e=>{
+    const orderBtn=e.target.closest('.dish-order');
+    if(orderBtn){
+      e.stopPropagation();
+      const url=orderBtn.getAttribute('data-order-url');
+      if(url)window.open(url,'_blank');
+      return;
+    }
+    if(e.target.closest('.hp-cart-ctl'))return;
+    const card=e.target.closest('.dish');
+    if(card && Dmodal){Dmodal.open(card);}
+  });
+
+  // Анимация .rv
   const io=new IntersectionObserver(es=>es.forEach(e=>{
     if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
   }),{threshold:.05});
   document.querySelectorAll('.rv').forEach(x=>io.observe(x));
 
   apply();
-
-  /* ---------- Модалка (1:1) ---------- */
-  const dm=document.getElementById('dmodal');
-  const media=dm.querySelector('.dm-media'),cat_=dm.querySelector('.dm-cat'),
-        ttl=dm.querySelector('.dm-body h3'),dsc=dm.querySelector('.dm-body p'),
-        foot=dm.querySelector('.dm-foot'),ks=dm.querySelector('.dm-sostav'),
-        ob=dm.querySelector('.dm-order');
-
-  function openDm(card){
-    media.innerHTML='';
-    const img=card.querySelector('.dish-img');
-    if(img){const c=img.cloneNode(true);c.querySelectorAll('img').forEach(i=>i.removeAttribute('loading'));media.appendChild(c);if(c.classList.contains('gal'))initGal(c);}
-    const h=card.querySelector('h3'),p=card.querySelector('p'),f=card.querySelector('.dish-foot');
-    ttl.innerHTML=h?h.innerHTML:'';
-    dsc.textContent=p?p.textContent:'';
-    foot.innerHTML=f?f.innerHTML:'';
-    cat_.textContent=(card.getAttribute('data-cat')||'').replace('popular','').trim();
-    // состав
-    const row=ALL_ROWS.find(r=>r.id===card.getAttribute('data-id'));
-    if(row && row.sostav && !card.classList.contains('drink')){
-      ks.innerHTML='<b>Состав</b>';ks.appendChild(document.createTextNode(row.sostav));ks.classList.remove('off');
-    } else {ks.innerHTML='';ks.classList.add('off');}
-    // order link
-    const g=card.closest('.grid');
-    if(g && g.getAttribute('data-rest')==='pravda'){
-      ob.href='https://eda.yandex.ru/r/pravda_znwvq?placeSlug=pravda_lfz8p';
-      ob.classList.remove('off');
-    } else {
-      ob.classList.add('off');
-    }
-    dm.classList.add('open');document.body.classList.add('dm-lock');
-  }
-  document.querySelectorAll('.dish').forEach(d=>d.addEventListener('click',()=>openDm(d)));
-  function closeDm(){dm.classList.remove('open');document.body.classList.remove('dm-lock');}
-  dm.querySelectorAll('[data-dmclose]').forEach(el=>el.addEventListener('click',closeDm));
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDm();});
-
-  /* ---------- Корзина (1:1) ---------- */
-  (function cartInit(){
-    const STORE='hp_cart_v2';
-    const PLUS='<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-    function money(n){return n.toLocaleString('ru-RU').replace(/\u00a0/g,'\u202f')+'\u202f\u20bd';}
-    function parsePrice(el){if(!el||el.classList.contains('tbd'))return null;const d=el.textContent.replace(/[^0-9]/g,'');return d?parseInt(d,10):null;}
-    const cards=[...document.querySelectorAll('.dish')];
-    function info(c){
-      const h=c.querySelector('h3');const name=h?h.textContent.replace('★','').trim():'';
-      const price=parsePrice(c.querySelector('.dish-price'));
-      const img=c.querySelector('.dish-img img');const src=img?img.getAttribute('src'):'';
-      const w=c.querySelector('.dish-w');
-      return {key:c.dataset.cartkey,name,price,img:src,weight:w?w.textContent.trim():''};
-    }
-    const byKey={};cards.forEach(c=>byKey[c.dataset.cartkey]=c);
-    let cart={};try{cart=JSON.parse(localStorage.getItem(STORE))||{};}catch(e){cart={};}
-    function save(){localStorage.setItem(STORE,JSON.stringify(cart));}
-    function add(c){const d=info(c);if(d.price==null)return;if(!cart[d.key])cart[d.key]={name:d.name,price:d.price,img:d.img,weight:d.weight,q:0};cart[d.key].q++;save();render();}
-    function inc(k){if(cart[k]){cart[k].q++;save();render();}}
-    function dec(k){if(cart[k]){cart[k].q--;if(cart[k].q<=0)delete cart[k];save();render();}}
-    function del(k){delete cart[k];save();render();}
-    function clearAll(){cart={};save();render();}
-    function count(){let n=0;for(const k in cart)n+=cart[k].q;return n;}
-    function total(){let s=0;for(const k in cart)s+=cart[k].q*cart[k].price;return s;}
-
-    cards.forEach(c=>{
-      if(parsePrice(c.querySelector('.dish-price'))==null)return;
-      const body=c.querySelector('.dish-body');if(!body)return;
-      const ctl=document.createElement('div');ctl.className='hp-cart-ctl';
-      body.appendChild(ctl);
-      ctl.addEventListener('click',e=>e.stopPropagation());
-      c._hpctl=ctl;
-    });
-    function renderCard(c){
-      const ctl=c._hpctl;if(!ctl)return;const k=c.dataset.cartkey;const q=cart[k]?cart[k].q:0;
-      if(q<=0){
-        ctl.innerHTML='<button class="hp-add" type="button">'+PLUS+' В корзину</button>';
-        ctl.querySelector('.hp-add').onclick=e=>{e.stopPropagation();add(c);};
-      } else {
-        ctl.innerHTML='<div class="hp-step"><button type="button" data-a="m">−</button><span class="hp-q">'+q+'</span><button type="button" data-a="p">+</button></div>';
-        ctl.querySelector('[data-a=m]').onclick=e=>{e.stopPropagation();dec(k);};
-        ctl.querySelector('[data-a=p]').onclick=e=>{e.stopPropagation();inc(k);};
-      }
-    }
-    const fab=document.getElementById('hpFab'),back=document.getElementById('hpCartBack'),drawer=document.getElementById('hpCart');
-    const listEl=document.getElementById('hpCartList'),totalEl=document.getElementById('hpTotal');
-    function openCart(){back.classList.add('open');drawer.classList.add('open');document.body.classList.add('hp-lock');}
-    function closeCart(){back.classList.remove('open');drawer.classList.remove('open');document.body.classList.remove('hp-lock');}
-    fab.addEventListener('click',openCart);
-    back.addEventListener('click',closeCart);
-    document.getElementById('hpCartClose').addEventListener('click',closeCart);
-    document.getElementById('hpClear').addEventListener('click',clearAll);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
-    function renderDrawer(){
-      const keys=Object.keys(cart);
-      if(!keys.length){listEl.innerHTML='<div class="hp-empty">Корзина пуста<br><span style="font-size:13px;font-weight:500">Добавьте блюда из меню</span></div>';return;}
-      let h='';
-      keys.forEach(k=>{const it=cart[k];
-        h+='<div class="hp-item"><div class="hp-item-img">'+(it.img?'<img src="'+it.img+'" alt="">':'')+'</div>'
-         +'<div class="hp-item-mid"><div class="hp-item-name">'+esc(it.name)+'</div>'
-         +'<div class="hp-item-price"><b>'+money(it.price)+'</b>'+(it.weight?' · '+esc(it.weight):'')+'</div>'
-         +'<div class="hp-mini"><button data-k="'+k+'" data-a="m">−</button><span class="hp-q">'+it.q+'</span><button data-k="'+k+'" data-a="p">+</button></div></div>'
-         +'<button class="hp-item-del" data-k="'+k+'" data-a="d">Удалить</button></div>';
-      });
-      listEl.innerHTML=h;
-      listEl.querySelectorAll('button[data-a]').forEach(b=>{b.onclick=()=>{const k=b.getAttribute('data-k'),a=b.getAttribute('data-a');if(a==='m')dec(k);else if(a==='p')inc(k);else del(k);};});
-    }
-    function render(){
-      const n=count();
-      fab.classList.toggle('show',n>0);
-      fab.querySelector('.hp-badge').textContent=n;
-      fab.querySelector('.hp-fabsum').innerHTML=money(total());
-      totalEl.innerHTML=money(total());
-      cards.forEach(renderCard);
-      renderDrawer();
-    }
-    render();
-  })();
 }
 
 /* =========================================================
-   START
+   BOOT
    ========================================================= */
+async function boot(){
+  const loader=document.getElementById('menuLoader');
+  try{
+    const res=await fetch(CSV_URL,{cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    ALL_ROWS=parseCSV(text);
+
+    // Рендер карточек
+    document.getElementById('gridPravda').innerHTML=ALL_ROWS.filter(r=>r.rest==='pravda').map(renderCard).join('');
+    document.getElementById('gridSoyuz').innerHTML =ALL_ROWS.filter(r=>r.rest==='soyuz').map(renderCard).join('');
+
+    // Фильтры
+    document.querySelector('.filters[data-rest="pravda"]').innerHTML=buildFilters(ALL_ROWS,'pravda');
+    document.querySelector('.filters[data-rest="soyuz"]').innerHTML =buildFilters(ALL_ROWS,'soyuz');
+
+    // Инициализация
+    document.querySelectorAll('.dish-img.gal').forEach(initGal);
+    initCardCartButtons();
+    initDrawer();
+    initUI();
+
+    // Первичный рендер кнопок корзины (Cart.onChange уже подписан, но толкнём вручную)
+    renderCardCartButtons();
+
+    loader.style.display='none';
+  }catch(e){
+    loader.className='menu-error';
+    loader.textContent='Не удалось загрузить меню: '+e.message;
+  }
+}
+
 boot();
 </script>
 </body>
